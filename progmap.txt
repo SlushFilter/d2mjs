@@ -1,0 +1,15 @@
+// ++DEBUG - Start of a DEBUG block
+// --DEBUG - End of a DEBUG block
+
+Code sections:
+/d2mjs.html - Main webpage.
+/LICENSE.md - License info.
+/progmap.txt - this file.
+/README.md - General information on the project.
+/lib/	Supporting libraries
+    /crafty.js - Crafty Engine
+
+/src/	Source code of the game
+    /d2m.js - Program setup and entry point.
+
+/res/	Resource and Data files
