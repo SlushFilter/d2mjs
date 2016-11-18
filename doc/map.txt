@@ -1,0 +1,91 @@
+map.txt - Map formatting specs.
+
+1. Maps will contain:
+  . Grouping data
+  . Spacial data
+
+2. Spacial Data
+  . The simplest form of spacial data is a single area.
+  . Represented by a group of four attributes.
+  . (x, y, w, h)
+  . Spacial data is just that, no metatags can be added to an area.
+
+3. Grouping
+  . Groups are what define the properties of their children.
+  . The first group defined in a map defenition is considered to be the 'root'
+    group.
+  . The engine is expected to interpret the metadata from the group and then
+    create the appropriate instances of Areas based on the group properites.
+  . Groups can be nested.
+  . A child group always inherits its parent group components.
+  . Attribute grouping is specific to all areas in a group and are expressed
+    as an object containing key:value pairs.
+
+4. Reserved Naming
+  . COMP - Comma delimited list of Component tags that is inherited by all sub
+           groups. Cannot be overridden.
+  . ATTR - Component attributes used by crafty. Attributes can be overridden by
+           child groups.
+  . AREA - An array of area data arrays. Area Data entries are 4 ordered values
+           that indicate [ X, Y, Width, Height ], respectively, of an area.
+
+5. Unreserved Names
+  . Any other valid javascript variable name will be treated as a sub group of
+  . the containing group.
+
+6. Map Components
+  . This is a list of proposed map components that need to be created for map
+    rendering and behavior.
+
+    MapSolid - Defines a solid, clear map area.
+    MapTiled - A single tiled image.
+    MapImage - A single map image.
+    MapSprite - An animated map sprite.
+    MapEntity - A superclass of map component that indicates this map object
+      has some sort of interaction (eg; spawners, portals, breakable objects.)
+
+Test Data:
+
+map00 : {  // Root grouping
+  COMP : "Map",
+  ATTR : { }
+  AREA :
+  attr : { name: "Area00" }, //
+
+  group00 : {
+    comp : "Solid",
+    attr : { }
+    area : [
+      [0, 0, 5, 5],
+      [5, 0, 10, 10],
+      [32, 32, 100, 16]
+    ]
+  },
+  group01 : {
+    comp : "Portal"
+    portal0 : {
+      attr : { exit: "portal1" },
+      area : { [10, 10, 15, 15 ]}
+    }
+    portal1 : {
+      attr : { exit: "portal0" },
+      area : { [100, 10, 15, 15]}
+    }
+  },
+  group02 : {
+    COMP : "SPAWN",
+    zombies : {
+      ATTR : { type: "Zombie" }
+      AREA : [ [16, 16, 1, 1],
+               [32, 16, 1, 1] ]
+    },
+    toads : {
+      ATTR : { type: "Toad" },
+      AREA : [ [16, 8, 1, 1] ]
+      fatToad : {
+        ATTR : { hp: 9999 },
+        AREA : [ [32, 8, 1, 1] ]
+      }
+    },
+  }
+}

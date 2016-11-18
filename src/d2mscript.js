@@ -22,16 +22,19 @@
 */
 
 Crafty.c("D2MScript", {
+
   init: function() {
     this._f = [];
     this._fi = 0;
     this._state = 0;
     this.callback = null;
   },
+
   _f: null, // Function Array
   _fi : 0,  // Function Index
   _state : 0, // Running (1) or stopped (0) state
   callback : null, // Callback function to fire when complete.
+
   step: function() {
     // Check for a running state.
     if(this._state === 0) { return; }
@@ -47,24 +50,29 @@ Crafty.c("D2MScript", {
       this._fi++;
     }
   },
+
   start: function() {
     this._fi = 0;
     this.uniqueBind("PostRender", this.step);
     this._state = 1;
   },
+
   halt: function() {
     this._fi = 0;
     this.unbind("PostRender");
     this._state = 0;
   },
+
   pause: function() {
     this.unbind("PostRender");
     this._state = 0;
   },
+
   resume: function() {
     this.uniqueBind("PostRender", this.step);
     this._state = 1;
   },
+
   sleep: function(time) {
     this.pause();
     this.timeout(this.resume, time);
@@ -77,6 +85,7 @@ Crafty.c("D2MScript", {
 */
 
 Crafty.c("D2MScriptListener", {
+
   init: function() {
     this.requires("D2MScript");
     this.bind("S_START", this.start);

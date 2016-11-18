@@ -1,0 +1,30 @@
+Design considerations : Early Draft :)
+
+Audio
+  * Audio Subsystem Considerations and Interface.
+
+Entity
+  * General entity structure and general purpose handling method.
+  * Inventory Layout
+  * Player Attributes
+    . Items
+    . Perks
+  * Monster Attributes
+  * Monsters
+
+Map Loading
+  * Map Format
+  * Data and Meta Data concerns
+  * Portaling
+
+User Interface
+  * Menu handling.
+
+Game Mechanics
+  * Game Physics
+  * Destructible Map Areas
+
+Gameplay Experience
+  * Over Arcing storyline.
+  * Shops
+  * Characters
