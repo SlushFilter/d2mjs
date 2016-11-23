@@ -1,28 +1,26 @@
-/* Crafty Initilization */
+/* d2m.js
+  Entry point into the program.
+*/
+
+// Crafty Initilization
 Crafty.init(D2MDefine.SCREEN_W, D2MDefine.SCREEN_H, "screen");
-Crafty.background("#000000");
+Crafty.pixelart(true);
+Crafty.background("#200000");
 
-// Set Resource Paths
-Crafty.paths({
-  audio: "res",
-  images: "res/gfx/"
-});
-// Load Resources
-Crafty.load(
-  {
-    images: ["test.png"]
-  },
-  function() {
-  }
-);
+Crafty.paths(D2MPath); // Set Resource Paths
 
+D2MGlobal.UI = Crafty.e("UIAnchor"); // Create the UI Subsystem Anchor
 
-// UI Test
-// Test 1 - Image test - Passed 112216
+Crafty.scene("Loading");
+
+// UI Test - Passed 112216
+/*
+// Test 1 - Image test
 var t = Crafty.e("UIImage").image("res/gfx/test.png").centerX();
 
 // Test 2 - Text test
 Crafty.e("UIText").text("TEST").centerX().centerY();
+*/
 
 // Script Test - Passed 111716
 /*
