@@ -31,7 +31,9 @@ Crafty.scene("Loading",
   },
 
   // Leave Scene
-  function() { D2MGlobal.UI.clear(); }
+  function() {
+    //D2MGlobal.UI.clear();
+  }
 );
 
 // Main
@@ -39,10 +41,24 @@ Crafty.scene("Loading",
   Main Menu
 */
 
+var m;
 Crafty.scene("Main",
   // Enter Scene
   function() {
-    D2MGlobal.UI.attach(Crafty.e("UIFader").color("#FF0000").fadeOut(3000));
+    var ui = D2MGlobal.UI;
+    // Build Main Menu UI screen
+    ui.attach(
+      Crafty.e("UIFader").fadeColor("#000000").fadeIn(3000), // Fader
+      Crafty.e("UIBox").color("#FF8000").attr({ y: 32, w: 640, h: 256 }).centerX() // Title
+    );
+
+    m = Crafty.e("UIMenu").addItem(Crafty.e("UIText").text("TEST"), null)
+                      .addItem(Crafty.e("UIText").text("TEST"), null)
+                      .addItem(Crafty.e("UIBox").attr({w: 128, h: 64}), null)
+                      .addItem(Crafty.e("UIText").text("TEST"), null)
+                      .setCursor(Crafty.e("UIBox").attr({ w: 16, h: 16 }));
+    m.selNext();
+
   },
   // Leave Scene
   function() {

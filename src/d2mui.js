@@ -156,3 +156,55 @@ Crafty.c("UIFader", {
   _duration: 0,
   _fadeIn: false
 })
+
+Crafty.c("UIMenu", {
+  init: function() {
+    this.requires("UIElement");
+    this._items = [];
+    this._itemY = this.pad;
+  },
+  addItem: function(item, callback) {
+    this._items.push({ i:item, c:callback });
+    this.attach(item);
+    item.x = this._itemX;
+    item.y = this._itemY;
+    this._itemY = this._itemY + item.h + this.pad;
+    return this;
+  },
+  setCursor: function(cursor) {
+    if(this.cursor != null) { this.cursor.destroy(); }
+    this.cursor = cursor;
+    this.attach(cursor);
+    cursor.x = this.pad;
+    return this;
+  },
+  setPosition: function() {
+    //this._index = 0;
+    var i = this._items[this._index].i;
+    this.cursor.y = (i.y + ~~(i.h / 2)) - ~~(this.cursor.h / 2);
+    console.log(this._index);
+    console.log(this.cursor.y);
+    return this;
+  },
+  selNext: function() {
+    this._index++;
+    if(this._index >= this._items.length) {
+      this._index = 0;
+    }
+    return this.setPosition();
+  },
+  selPrev: function() {
+    this._index--;
+    if(this._index < 0) {
+      this._index = this._items.length - 1;
+    }
+    return this.setPosition();
+  },
+  cursor: null,
+  pad:4, // Default 4 pixel padding.
+  _index: 0,
+  _itemX: 32,
+  _itemY: 0,
+  _items: null,
+  _cursor: null,
+});
