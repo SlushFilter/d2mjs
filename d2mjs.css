@@ -1,0 +1,7 @@
+@font-face {
+    font-family: 'd2m';
+    src: url('res/dc_s-webfont.woff2') format('woff2'),
+         url('res/dc_s-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}

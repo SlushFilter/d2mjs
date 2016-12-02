@@ -21,18 +21,13 @@ Crafty.scene("Loading",
       Crafty.e("UIText").text("Loading...").centerX().centerY()
     );
 
-    // Load Resources
-    Crafty.load(
-      D2MAssets,
-      function() {
-        Crafty.scene("Main");
-      }
-    );
+    // Load Resources, then start the main scene.
+    Crafty.load( D2MAssets, function() { Crafty.scene("Main"); } );
   },
 
   // Leave Scene
   function() {
-    //D2MGlobal.UI.clear();
+    D2MGlobal.UI.clear();
   }
 );
 
@@ -52,13 +47,46 @@ Crafty.scene("Main",
       Crafty.e("UIBox").color("#FF8000").attr({ y: 32, w: 640, h: 256 }).centerX() // Title
     );
 
-    m = Crafty.e("UIMenu").addItem(Crafty.e("UIText").text("TEST"), null)
-                      .addItem(Crafty.e("UIText").text("TEST"), null)
-                      .addItem(Crafty.e("UIBox").attr({w: 128, h: 64}), null)
-                      .addItem(Crafty.e("UIText").text("TEST"), null)
-                      .setCursor(Crafty.e("UIBox").attr({ w: 16, h: 16 }));
-    m.selNext();
+    // Main Menu . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    var mi = [
+      { ent: Crafty.e("UIText").text("New Game"),
+        callback: function() { Crafty.scene("NewGame"); } },
+      { ent: Crafty.e("UIText").text("Continue"),
+        callback: function() { Crafty.scene("Continue"); } }
+    ];
+    ui.attach(Crafty.e("UIMenu")
+      .setItems(mi)
+      .attr({ y: 320 })
+      .setCursor(Crafty.e("UIBox").attr({ w: 16, h: 16 }))
+      .setCancelCallback(function() { console.log("Cancel"); })
+      .centerX()
+      .keyCapture()
+    );
 
+  },
+  // Leave Scene
+  function() {
+  }
+);
+
+Crafty.scene("NewGame",
+  // Enter Scene
+  function() {
+    var ui = D2MGlobal.UI;
+    ui.clear();
+    ui.attach(Crafty.e("UIText").text("New Game").centerX());
+  },
+  // Leave Scene
+  function() {
+  }
+);
+
+Crafty.scene("Continue",
+  // Enter Scene
+  function() {
+    var ui = D2MGlobal.UI;
+    ui.clear();
+    ui.attach(Crafty.e("UIText").text("Continue").centerX());
   },
   // Leave Scene
   function() {

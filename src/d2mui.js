@@ -9,6 +9,7 @@
  * Private Events :
  *
  */
+
 // UIAnchor
 /*
   'Anchor' point for all UI elements. Automatically updates its coords to the
@@ -16,7 +17,7 @@
 */
 Crafty.c("UIAnchor", {
   init: function() {
-    this.requires("2D");
+    this.requires("2D, Persist");
     this.bind("ViewportScroll", function(d) {
       // Round x and y coordinates to prevent jitter.
       this.x = -Math.round(Crafty.viewport._x);
@@ -85,7 +86,7 @@ Crafty.c("UIText", {
     // Default white color.
     this.textColor("#FFFFFF");
     // Default font.
-    this.textFont({ size: "32px", family: "Lucida Console", weight: "bold"});
+    this.textFont({ size: "32px", family: "D2M"});
   }
 });
 
@@ -157,48 +158,107 @@ Crafty.c("UIFader", {
   _fadeIn: false
 })
 
+
+//UIMenu
+/*
+  A basic text menu. User must supply a cursor and menu items.
+
+  Menu items are defined as an array of objects :
+  items [
+    { text: "text", callback: function() { selection callback } },
+    { text: "text", callback: function() { selection callback } },
+    { text: "text", callback: function() { selection callback } }
+  ]
+
+*/
+
 Crafty.c("UIMenu", {
   init: function() {
-    this.requires("UIElement");
+    this.requires("UIElement, KeyListener, Canvas, Color");
     this._items = [];
     this._itemY = this.pad;
+    this.color("#000080");
+    this.z = D2MDefine.UI_TOP;
+    // Keyboard Binds
+    this.bind("KB_U", this.selPrev);
+    this.bind("KB_D", this.selNext);
+    this.bind("KB_1", this.select);
+    this.bind("KB_0", this.cancel);
   },
-  addItem: function(item, callback) {
-    this._items.push({ i:item, c:callback });
-    this.attach(item);
-    item.x = this._itemX;
-    item.y = this._itemY;
-    this._itemY = this._itemY + item.h + this.pad;
+  /*
+    setItems(items)
+    Add an array of item objects and align them in the menu.
+    This resizes the UIMenu accordingly.
+  */
+  setItems: function(items) {
+    this._items = items;
+    var yy = this.pad;
+    // Add all items and align them.
+    for(var i = 0; i < this._items.length; i++) {
+      var item = this._items[i].ent;
+      this.attach(item);
+      item.x = this._itemX;
+      // Update UIMenu size if needed.
+      if(item.x + item.w + this.pad + this._itemX > this.w ) {
+        this._w = item.x + item.w + this.pad + this._itemX;
+      }
+      item.y = yy;
+      item.z = this.z + 1;
+      yy = yy + item.h + this.pad;
+    }
+    this._h = yy;
+    console.log(item.h);
+    return this;
+  },
+  select: function(keyDown) {
+    if(keyDown === false) { return; }
+    this._items[this._index].callback();
+  },
+  cancel: function(keyDown) {
+    if(keyDown === false) { return; }
+    this._cancel();
+  },
+  setCancelCallback: function(callback) {
+    this._cancel = callback;
     return this;
   },
   setCursor: function(cursor) {
-    if(this.cursor != null) { this.cursor.destroy(); }
+    if(this.cursor != null) {
+      this.detach(this.cursor);
+      this.cursor.destroy();
+    }
     this.cursor = cursor;
     this.attach(cursor);
     cursor.x = this.pad;
+    cursor.z = this.z + 1;
+    if(this.items !== null) {
+      this.setPosition();
+    }
     return this;
   },
   setPosition: function() {
-    //this._index = 0;
-    var i = this._items[this._index].i;
+    var i = this._items[this._index].ent;
     this.cursor.y = (i.y + ~~(i.h / 2)) - ~~(this.cursor.h / 2);
-    console.log(this._index);
-    console.log(this.cursor.y);
     return this;
   },
-  selNext: function() {
+  selNext: function(keyDown) {
+    if(keyDown === false) { return; }
     this._index++;
     if(this._index >= this._items.length) {
       this._index = 0;
     }
     return this.setPosition();
   },
-  selPrev: function() {
+  selPrev: function(keyDown) {
+    if(keyDown === false) { return; }
     this._index--;
     if(this._index < 0) {
       this._index = this._items.length - 1;
     }
     return this.setPosition();
+  },
+  setHAlignment: function(x) {
+    this._itemX = x;
   },
   cursor: null,
   pad:4, // Default 4 pixel padding.

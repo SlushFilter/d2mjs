@@ -28,8 +28,8 @@ Crafty.c("KeyController", {
     init: function() {
       this.bind("KB_CAPTURE", this._capture);
       this.bind("KB_RELEASE", this._release);
-      this.bind("KeyDown", null);
-      this.bind("KeyUp", null);
+      this.bind("KeyDown", this._keyDown);
+      this.bind("KeyUp", this._keyUp);
     },
     _keyDown: function(e) {
       if(e.key == Crafty.keys.LEFT_ARROW) {
@@ -45,9 +45,9 @@ Crafty.c("KeyController", {
       } else if (e.key == Crafty.keys.B) {
         this._focus.trigger("KB_B", true)
       } else if (e.key == Crafty.keys.ENTER) {
-        this._focus.trigger("KB_0", true)
-      } else if (e.key == Crafty.keys.ESC) {
         this._focus.trigger("KB_1", true)
+      } else if (e.key == Crafty.keys.ESC) {
+        this._focus.trigger("KB_0", true)
       }
     },
     _keyUp: function(e) {
@@ -64,11 +64,11 @@ Crafty.c("KeyController", {
       } else if (e.key == Crafty.keys.B) {
         this._focus.trigger("KB_B", false)
       } else if (e.key == Crafty.keys.ENTER) {
-        this._focus.trigger("KB_0", false)
-      } else if (e.key == Crafty.keys.ESC) {
         this._focus.trigger("KB_1", false)
+      } else if (e.key == Crafty.keys.ESC) {
+        this._focus.trigger("KB_0", false)
       }
-    }
+    },
     _capture: function(ent) {
       if(ent === null || ent === undefined) { return; }
       this._keyQueue.push(ent);
@@ -86,4 +86,17 @@ Crafty.c("KeyController", {
     },
     _focus: null,
     _keyQueue: [] // Global keyboard listener array.
+});
+
+// KeyListener
+/*
+  Any entities that wish to read keyboard input should be tagged as a KeyListener
+*/
+Crafty.c("KeyListener", {
+  init: function() {
+  },
+  keyCapture: function() {
+    Crafty.trigger("KB_CAPTURE", this);
+    return this;
+  }
 });
