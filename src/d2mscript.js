@@ -34,7 +34,12 @@ Crafty.c("D2MScript", {
   _fi : 0,  // Function Index
   _state : 0, // Running (1) or stopped (0) state
   callback : null, // Callback function to fire when complete.
-
+  script: function(funArray) {
+    this._f = funArray;
+    this._fi = 0;
+    this._state = 0;
+    return this;
+  },
   step: function() {
     // Check for a running state.
     if(this._state === 0) { return; }
@@ -85,7 +90,6 @@ Crafty.c("D2MScript", {
 */
 
 Crafty.c("D2MScriptListener", {
-
   init: function() {
     this.requires("D2MScript");
     this.bind("S_START", this.start);

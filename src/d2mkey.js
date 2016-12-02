@@ -77,11 +77,16 @@ Crafty.c("KeyController", {
     _release: function(ent) {
       if(ent === null || ent === undefined) {
         this._keyQueue.pop();
-        if(this._keyQueue.length === 0) {
-          this._focus = null
-        } else {
-          this._focus = this.keyQueue.length - 1;
+      } else {
+        var i = this._keyQueue.indexOf(ent);
+        if(i > -1) {
+          this._keyQueue.splice(i, this._keyQueue);
         }
+      }
+      if(this._keyQueue.length === 0) {
+        this._focus = null
+      } else {
+        this._focus = this.keyQueue.length - 1;
       }
     },
     _focus: null,
@@ -89,14 +94,26 @@ Crafty.c("KeyController", {
 });
 
 // KeyListener
+// TODO: Fully bugtest KB_RELEASE behavior :)
 /*
   Any entities that wish to read keyboard input should be tagged as a KeyListener
 */
 Crafty.c("KeyListener", {
   init: function() {
   },
+  remove: function(destroy) {
+    if(this.destroy === true) {
+      // Notify any KeyControllers that this is no longer a valid object.
+      this.keyRelease();
+    }
+    return this;
+  },
   keyCapture: function() {
     Crafty.trigger("KB_CAPTURE", this);
+    return this;
+  },
+  keyRelease: function() {
+    Crafty.trigger("KB_RELEASE", this);
     return this;
   }
 });

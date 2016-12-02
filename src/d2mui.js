@@ -68,25 +68,26 @@ Crafty.c("UIImage", {
 // UIText
 /*
   Static Text UI element.
-  note: Custom HTML5 fonts can be loaded from d2mjs.html with the following code
-  @font-face {
-  font-family: 'Tagesschrift';
-  src: url('tagesschrift.eot'); // IE 5-8
-  src: local('☺'),             // sneakily trick IE
-        url('tagesschrift.woff') format('woff'),    // FF 3.6, Chrome 5, IE9
-        url('tagesschrift.ttf') format('truetype'), // Opera, Safari
-        url('tagesschrift.svg#font') format('svg'); // iOS
-  }
 */
 
 Crafty.c("UIText", {
   init: function() {
-    this.requires("UIElement, Canvas, Text");
+    this.requires("UIElement, DOM, Text");
     this.z = D2MDefine.UI_TEXT;
     // Default white color.
     this.textColor("#FFFFFF");
     // Default font.
     this.textFont({ size: "32px", family: "D2M"});
+    this.unselectable();
+  },
+  // Resizes the DOM element to fit all text on one line.
+  oneLine: function() {
+    var ctx = Crafty.canvasLayer.context;
+    ctx.font = "32px d2m";
+    var size = ctx.measureText(this._text);
+    this.h = 32;
+    this.w = ~~(size.width + 1);
+    return this;
   }
 });
 
@@ -96,7 +97,7 @@ Crafty.c("UIText", {
 */
 Crafty.c("UIBox", {
   init: function() {
-    this.requires("UIElement, Canvas, Color");
+    this.requires("UIElement, DOM, Color");
     this.z = D2MDefine.UI_IMAGE;
     // Default yellow color.
     this.color("#FFFF00");
@@ -165,9 +166,10 @@ Crafty.c("UIFader", {
 
   Menu items are defined as an array of objects :
   items [
-    { text: "text", callback: function() { selection callback } },
-    { text: "text", callback: function() { selection callback } },
-    { text: "text", callback: function() { selection callback } }
+    { text: "text",
+      callback: function() { } // Called when the item has been confirmed.
+      sCallback: function() { } // (optional) Called when the cursor lands on this item.
+    },
   ]
 
 */
@@ -184,6 +186,10 @@ Crafty.c("UIMenu", {
     this.bind("KB_D", this.selNext);
     this.bind("KB_1", this.select);
     this.bind("KB_0", this.cancel);
+  },
+  setPadding: function(pad) {
+    this.pad = pad;
+    return this;
   },
   /*
     setItems(items)
@@ -239,6 +245,9 @@ Crafty.c("UIMenu", {
   setPosition: function() {
     var i = this._items[this._index].ent;
     this.cursor.y = (i.y + ~~(i.h / 2)) - ~~(this.cursor.h / 2);
+    if(typeof(this._items[this._index].sCallback) == 'function') {
+      this._items[this._index].sCallback();
+    }
     return this;
   },
   selNext: function(keyDown) {
@@ -259,12 +268,13 @@ Crafty.c("UIMenu", {
   },
   setHAlignment: function(x) {
     this._itemX = x;
+    return this;
   },
   cursor: null,
   pad:4, // Default 4 pixel padding.
   _index: 0,
   _itemX: 32,
   _itemY: 0,
-  _items: null,
   _cursor: null,
+  _items: null,
 });
