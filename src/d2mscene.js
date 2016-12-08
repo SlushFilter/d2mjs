@@ -56,7 +56,9 @@ Crafty.scene("Main",
       { ent: Crafty.e("UIText").text("New Game").oneLine(),
         callback: function() { Crafty.scene("NewGame"); } },
       { ent: Crafty.e("UIText").text("Continue").oneLine(),
-        callback: function() { Crafty.scene("Continue"); } }
+        callback: function() { Crafty.scene("Continue"); } },
+      { ent: Crafty.e("UIText").text("Test Map").oneLine(),
+        callback: function() { Crafty.scene("TestMap"); } }
     ];
     ui.attach(Crafty.e("UIMenu")
       .setItems(m)
@@ -151,11 +153,35 @@ Crafty.scene("NewGame",
   Continue a saved game.
 */
 Crafty.scene("Continue",
+// Enter Scene
+function() {
+  var ui = D2MGlobal.UI;
+  ui.clear();
+  ui.attach(Crafty.e("UIText").text("Continue").centerX());
+},
+// Leave Scene
+function() {
+}
+);
+
+
+// TestMap - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*
+ Test Map Environment
+*/
+Crafty.scene("TestMap",
   // Enter Scene
   function() {
     var ui = D2MGlobal.UI;
     ui.clear();
-    ui.attach(Crafty.e("UIText").text("Continue").centerX());
+    Crafty.e("WBlock, WSolid").attr({x: 64, y: 64, w: 64, h:472  });
+    Crafty.e("WBlock, WSolid").attr({x: 672, y: 64, w: 64, h:472  });
+    Crafty.e("WBlock, WSolid").attr({x: 128, y: 536, w: 544, h:64  });
+    Crafty.e("WBlock, WSolid").attr({x: 256, y: 472, w: 64, h:64  });
+    Crafty.e("WBlock, WSolid").attr({x: 320, y: 408, w: 64, h:128  });
+    Crafty.e("WBlock, WSolid").attr({x: 384, y: 472, w: 64, h:64  });
+    Crafty.e("WBlock, WSolid").attr({x: 512, y: 344, w: 64, h:64  });
+    Crafty.e("WBlock").attr({x: 192, y: 408, w: 64, h:128  });
   },
   // Leave Scene
   function() {

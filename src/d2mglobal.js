@@ -4,5 +4,5 @@ Global variables for D2M
 
 var D2MGlobal = {
   UI : null, // UI System entity.
-  Keyboard: null,
+  Keyboard: null, // Keyboard System entity.
 }
