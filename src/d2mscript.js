@@ -18,7 +18,7 @@
   Base component for scripts. Contains an array of raw functions, in sequence, and basic controls to step through them.
   Derivitaves can contain state data as well.
 
-  Functions that are contained in a script should be accept the script entity as a passed parameter.
+  Functions that are contained in a script should accept the script entity as a passed parameter.
 */
 
 Crafty.c("D2MScript", {

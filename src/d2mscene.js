@@ -95,7 +95,7 @@ Crafty.scene("NewGame",
     // Hero selection menu contents.
     var m = [
       { ent: Crafty.e("UIBox").color("#008000").attr({ w: 128, h: 128 }),
-        callback: function() { console.log("Confirm Knight.") },
+        callback: function() { console.log("Confirm Knight."); Crafty.e("PKnight"); },
         sCallback: function() {
           Crafty("D2MHERONAME").text("- Knight -");
           Crafty("D2MHEROINFO").text("The Lord of the Land has tasked you with the quelling of the terrible power eminating from the Dimension Tomb. You are to return victorious or die trying.");
