@@ -1,16 +1,35 @@
 // ++DEBUG - Start of a DEBUG block
 // --DEBUG - End of a DEBUG block
 
-Code sections:
-/d2mjs.html - Main webpage.
-/LICENSE.md - License info.
-/progmap.txt - this file.
-/todo.txt - the todo list
-/README.md - General information on the project.
-/lib/	Supporting libraries
-    /crafty.js - Crafty Engine
+Files :
 
-/src/	Source code of the game
-    /d2m.js - Program setup and entry point.
+d2mjs.css - css formatting for page load.
+d2mjs.html - Main webpage.
+LICENSE.md - License info.
+README.md - General information on the project.
 
-/res/	Resource and Data files
+/doc - Program documentation
+	map.txt - rantings about map format
+	progmap.txt - this file.
+	todo.txt - the todo list
+	
+/lib - Supporting libraries
+    crafty.js - Crafty Engine
+
+/src - Source code of the game
+    d2m.js - Program setup and entry point.
+	d2mdefine.js - Global defines
+	d2mglobal.js - Global variables
+	d2mimage.js - Image component registry
+	d2mkey.js - Keyboard code
+	d2mscene.js - Scene definitions
+	d2mscript.js - In-Game scripts
+	d2mui.js - UI Components
+	d2mworld.js - World (map) components and utility functions.
+	d2mactor.js - Actor components and utility functions.
+	
+/res - Resource and Data files
+	dc_s-webfont.woff - Game font
+	dc_s-webfont.woff2 - Game font
+	/gfx
+		test.png - Testing gfx
