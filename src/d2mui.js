@@ -80,14 +80,9 @@ Crafty.c("UIText", {
     this.textFont({ size: "32px", family: "D2M"});
     this.unselectable();
   },
-  // Resizes the DOM element to fit all text on one line.
-  oneLine: function() {
-    var ctx = Crafty.canvasLayer.context;
-    ctx.font = "32px d2m";
-    var size = ctx.measureText(this._text);
-    this.h = 32;
-    this.w = ~~(size.width + 1);
-    return this;
+  oneLine : function() {
+	console.log("Depricated");
+	return this;
   }
 });
 

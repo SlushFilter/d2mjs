@@ -41,6 +41,7 @@ Crafty.c("KeyController", {
       this.bind("KeyUp", this._keyUp);
     },
     _keyDown: function(e) {
+		if(this._focus === null) { return; }
       if(e.key == Crafty.keys.LEFT_ARROW) {
         this._focus.trigger("KB_L", true);
       } else if (e.key == Crafty.keys.RIGHT_ARROW) {
@@ -60,6 +61,7 @@ Crafty.c("KeyController", {
       }
     },
     _keyUp: function(e) {
+		if(this._focus === null) { return; }
       if(e.key == Crafty.keys.LEFT_ARROW) {
         this._focus.trigger("KB_L", false);
       } else if (e.key == Crafty.keys.RIGHT_ARROW) {

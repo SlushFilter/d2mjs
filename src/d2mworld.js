@@ -8,9 +8,10 @@
   Defines a 'solid' wall or barrier.
 */
 Crafty.c("WSolid", {
+  friction : 0.8,
   init: function() {
     // TODO: Remove debugging feature for WSolid
-    this.requires("2D, DebugRectangle");
+    this.requires("2D, Canvas, Collision, DebugRectangle");
     this.debugStroke("red");
     this.debugRectangle(this);
   }
@@ -20,7 +21,7 @@ Crafty.c("WSolid", {
 Crafty.c("WBlock", {
   init: function() {
     // TODO: Remove debugging feature for WBlock
-    this.requires("2D, DebugRectangle");
+    this.requires("2D, Canvas, DebugRectangle");
     this.w = 64;
     this.h = 64;
     this.debugStroke("blue");

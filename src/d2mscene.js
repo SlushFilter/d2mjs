@@ -53,11 +53,11 @@ Crafty.scene("Main",
 
     // Main Menu
     var m = [
-      { ent: Crafty.e("UIText").text("New Game").oneLine(),
+      { ent: Crafty.e("UIText").text("New Game").attr({ w: 156, h: 32 }),
         callback: function() { Crafty.scene("NewGame"); } },
-      { ent: Crafty.e("UIText").text("Continue").oneLine(),
+      { ent: Crafty.e("UIText").text("Continue").attr({ w: 32, h: 32 }),
         callback: function() { Crafty.scene("Continue"); } },
-      { ent: Crafty.e("UIText").text("Test Map").oneLine(),
+      { ent: Crafty.e("UIText").text("Test Map").attr({ w: 256, h: 32 }),
         callback: function() { Crafty.scene("TestMap"); } }
     ];
     ui.attach(Crafty.e("UIMenu")
@@ -72,6 +72,7 @@ Crafty.scene("Main",
   },
   // Leave Scene
   function() {
+	// TODO: Fadeout
   }
 );
 
@@ -89,13 +90,14 @@ Crafty.scene("Main",
 Crafty.scene("NewGame",
   // Enter Scene
   function() {
+	// TODO: Fadein
     var ui = D2MGlobal.UI;
     ui.clear();
-    ui.attach(Crafty.e("UIText").text("New Game").oneLine().centerX());
+    ui.attach(Crafty.e("UIText").text("New Game").attr({ w: 156, h: 32 }).centerX());
     // Hero selection menu contents.
     var m = [
       { ent: Crafty.e("UIBox").color("#008000").attr({ w: 128, h: 128 }),
-        callback: function() { console.log("Confirm Knight."); Crafty.e("PKnight"); },
+        callback: function() { console.log("Confirm Knight."); },
         sCallback: function() {
           Crafty("D2MHERONAME").text("- Knight -");
           Crafty("D2MHEROINFO").text("The Lord of the Land has tasked you with the quelling of the terrible power eminating from the Dimension Tomb. You are to return victorious or die trying.");
@@ -121,8 +123,7 @@ Crafty.scene("NewGame",
     // Hero name textbox.
     ui.attach(
       Crafty.e("UIText, D2MHERONAME").text("- HERO NAME -")
-        .attr({x: 320, y: 128 })
-        .oneLine(),
+        .attr({x: 320, y: 128, w: 256, h: 256 }),
       Crafty.e("UIText, D2MHEROINFO")
         .attr({x: 320, y: 184, w: 444, h: 256 })
         .text("This is a text description of the hero's attributes and stuff.")
@@ -144,6 +145,7 @@ Crafty.scene("NewGame",
   },
   // Leave Scene
   function() {
+	  // TODO: Fadeout
   }
 );
 
@@ -164,7 +166,6 @@ function() {
 }
 );
 
-
 // TestMap - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
  Test Map Environment
@@ -174,6 +175,7 @@ Crafty.scene("TestMap",
   function() {
     var ui = D2MGlobal.UI;
     ui.clear();
+	// World Generation
     Crafty.e("WBlock, WSolid").attr({x: 64, y: 64, w: 64, h:472  });
     Crafty.e("WBlock, WSolid").attr({x: 672, y: 64, w: 64, h:472  });
     Crafty.e("WBlock, WSolid").attr({x: 128, y: 536, w: 544, h:64  });
@@ -181,7 +183,10 @@ Crafty.scene("TestMap",
     Crafty.e("WBlock, WSolid").attr({x: 320, y: 408, w: 64, h:128  });
     Crafty.e("WBlock, WSolid").attr({x: 384, y: 472, w: 64, h:64  });
     Crafty.e("WBlock, WSolid").attr({x: 512, y: 344, w: 64, h:64  });
-    Crafty.e("WBlock").attr({x: 192, y: 408, w: 64, h:128  });
+    
+	// Player generation
+	Crafty.e("APlayer").attr({x: 148, y: 64});
+	
   },
   // Leave Scene
   function() {

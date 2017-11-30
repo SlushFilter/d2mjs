@@ -2,32 +2,56 @@ Design considerations : Early Draft :)
 
 Audio
   * Audio Subsystem Considerations and Interface.
+	. Background Music
+	. Sound Effects
 
 Entity
   * General entity structure and general purpose handling method.
   * Inventory Layout
+  * Actors
+	+ Base Actor Component - 11.30.17
   * Player Attributes
+	. Health
     . Items
     . Perks
+  * Player Classes
+	. Implement Classes as Base Perks
   * Monster Attributes
   * Monsters
 
 Map Loading
   * Map Format
+	. map.txt crated, this will serve as a rough draft.
   * Data and Meta Data concerns
   * Portaling
 
 User Interface
   * Menu handling.
-
+  * Implement UI as a crafty subsys.
+  * User Input
+	+ Register a player controller through Crafty Subsystems - 11.30.17
 Game Mechanics
   * Game Physics
+	+ Using Crafty Gravity - 11.30.17
+	. Wall Collisions 
+		. Rough wall handling implemented, see APlayer for the rough draft
+	. Movement
+		. Walking : Lateral movement when 'onground'
+		. Jumping : Vertical movement thrust when 'onground' - works, but not happy with airwalk and seems squirrley
+		. Flying
+		. Floating
+		+ Falling : Default action of Gravity
+		+ Friction : Implemented on WSolid world blocks. See APlayer for rough draft on entity interaction.
+  * Game Interactions
+	- Attacking
+	
   * Destructible Map Areas
 
 Gameplay Experience
   * Over Arcing storyline.
   * Shops
   * Characters
-
-Lore
   * Come up with a better name than Vrugou
+  
+-- DONE ---
+

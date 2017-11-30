@@ -4,15 +4,31 @@
 
 // Crafty Initilization
 Crafty.init(D2MDefine.SCREEN_W, D2MDefine.SCREEN_H, "screen");
-Crafty.canvasLayer.init();
 Crafty.pixelart(true);
 Crafty.background("#200000");
 
 Crafty.paths(D2MPath); // Set Resource Paths
 
-D2MGlobal.UI = Crafty.e("UIAnchor"); // Create the UI Subsystem Anchor
+// Create the UI Subsystem Anchor
+// TODO: Update this to be a Crafty subsystem :)
+D2MGlobal.UI = Crafty.e("UIAnchor"); 
+
+
+// Controller setup
+Crafty.s("Controls").defineDpad("Dpad", {
+	RIGHT_ARROW: 0, 
+	  LEFT_ARROW: 180,
+	  UP_ARROW: 270,
+	  DOWN_ARROW: 90
+});
+Crafty.s("Controls").defineTriggerGroup("A", { keys: [Crafty.keys.A] });
+Crafty.s("Controls").defineTriggerGroup("B", { keys: [Crafty.keys.D] });
+Crafty.s("Controls").defineTriggerGroup("Confirm", { keys: [Crafty.keys.E, Crafty.keys.ENTER] });
+Crafty.s("Controls").defineTriggerGroup("Cancel", { keys: [Crafty.keys.Q, Crafty.keys.ESCAPE] });
+
+// TODO: Deprecate this once UI has been reworked.
 D2MGlobal.Keyboard = Crafty.e("KeyController");
-Crafty.scene("Loading");
+Crafty.scene("TestMap");
 
 // UI Test - Passed 112216
 /*
