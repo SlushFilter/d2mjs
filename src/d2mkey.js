@@ -23,7 +23,16 @@
  *  KB_1 : Confirm
  *
  */
-
+ 
+ // KeyController
+ /*
+	A default KeyController component - Used for passing keyboard presses to listeners.
+	Entities that fire the KB_CAPTURE event become the 'focused' entity on the KeyController list.
+	They will remain the focused entity until they pass a KB_RELEASE event.
+	
+	A component that listens to a KeyController should listen for the KB_* events to determine
+	when a key is pressed or released. (see header comments for all KB_* events)
+ */
 Crafty.c("KeyController", {
     init: function() {
       this.bind("KB_CAPTURE", this._capture);
@@ -101,13 +110,6 @@ Crafty.c("KeyController", {
 Crafty.c("KeyListener", {
   init: function() {
   },
-  remove: function(destroy) {
-    if(this.destroy === true) {
-      // Notify any KeyControllers that this is no longer a valid object.
-      this.keyRelease();
-    }
-    return this;
-  },
   keyCapture: function() {
     Crafty.trigger("KB_CAPTURE", this);
     return this;
@@ -116,4 +118,23 @@ Crafty.c("KeyListener", {
     Crafty.trigger("KB_RELEASE", this);
     return this;
   }
+});
+
+// PlayerController
+/*
+	A Controller state that contains all information on the current state of a controller.
+	Stored in a _keyState object - see code for valid values.
+*/
+Crafty.c("Controller", {
+	init: function() {
+		this._keyState = { left: false, right: false, up: false, down: false, a: false, b: false, cancel: false, confirm: false };
+		this.bind("KB_U", function(e) { this._keyState.left = e; });
+		this.bind("KB_D", function(e) { this._keyState.right = e; });
+		this.bind("KB_L", function(e) { this._keyState.up = e; });
+		this.bind("KB_R", function(e) { this._keyState.down = e; });
+		this.bind("KB_A", function(e) { this._keyState.a = e; });
+		this.bind("KB_B", function(e) { this._keyState.b = e; });
+		this.bind("KB_0", function(e) { this._keyState.cancel = e; });
+		this.bind("KB_1", function(e) { this._keyState.confirm = e; });
+	}
 });
