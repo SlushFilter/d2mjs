@@ -16,9 +16,6 @@
 	Base component for all actors.
 */
 Crafty.c("Actor", {
-  walkSpeed : 8,
-  airWalk : 0.1,
-  jumpImpulse : 256,
   init: function() {
     // TODO: Remove debugging feature for Actor
     this.requires("2D, Canvas, DebugRectangle");
@@ -29,9 +26,13 @@ Crafty.c("Actor", {
   }
 });
 
+// APlayer
+/*
+	The Player Actor
+*/
 Crafty.c("APlayer", {
 	init: function() {
-		this.requires("Actor, Gravity, Collision, Controllable");
+		this.requires("Actor, Gravity, Collision, Controllable, MVNormal");
 		
 		this.gravity("WSolid");
 		
@@ -59,8 +60,7 @@ Crafty.c("APlayer", {
 		this.bind("EnterFrame", this.think);
 	},
 	think : function() {
-		this.walk();
-		this.jump();
+		this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
 	},
 	checkCollision : function(c) {
         var hitDatas, hitData;
@@ -82,38 +82,56 @@ Crafty.c("APlayer", {
 		if(d.x > 0) { this.dpad.r = true; } else { this.dpad.r = false; }
 		if(d.y < 0) { this.dpad.u = true; } else { this.dpad.u = false; }
 		if(d.y > 0) { this.dpad.d = true; } else { this.dpad.d = false; }
-	},
-	walk : function() {
-		var s = this.walkSpeed;
-		if(this.onGround === false) {
-			if(this.vx + s > this.walkSpeed || this.vx - s < -this.walkSpeed) {
-				return;
-			}
-			if(this.dpad.r === true) {
-				this.vx += s;
-			} else if (this.dpad.l === true) {
-				this.vx += -s;
-			}
-			
-		} else {
-			if(this.dpad.r === true) {
-				this.vx = s;
-			} else if (this.dpad.l === true) {
-				this.vx = -s;
-			}
+	}
+});
 
-			if(this.ground.friction !== "undefind") {
-				this.vx *= this.ground.friction;
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	Movement Types
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+// MVNormal
+/*
+	Basic Walking and Jumping Behavior
+*/
+Crafty.c("MVNormal", {
+	_walkSpeed : 186,
+	_walkAccel : 32,
+	_jumpImpulse : 256,
+	init : function() {
+		this.requires("Actor, Gravity, Collision");
+	},
+	actMove : function(left, right, jump) {
+		if(this.ground !== null) {
+			// Apply ground friction
+			this.vx = this.vx * this.ground.friction;
+			if(left === true) {
+				this.walk(-1);
+			}
+			if(right === true) {
+				this.walk(1);
+			}
+			if(jump === true) {
+				this.jump();
 			}
 		}
-		
+	},
+	walk : function(dir) {
+		var s = this._walkSpeed;
+		var a = this._walkAccel;
+		if(this.ground !== null) {
+			if(dir < 0 && this.vx > -s) {
+				this.vx -= a;
+				if(this.vx < -s) { this.vx = -s; }
+			} else if(dir > 0 && this.vx < s) {
+				this.vx += a;
+				if(this.vx > s) { this.vx = s; }
+			}
+		}
 	},
 	jump : function() {
-		if(this.onGround === false) {
-			return;
-		}
-		if(this.buttons.a === true) {
-			this.vy = -this.jumpImpulse;
+		var i = this._jumpImpulse;
+		if(this.ground !== null && this.vy > -i) {
+			this.vy += -i;
 		}
 	}
 });
