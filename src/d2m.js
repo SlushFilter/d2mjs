@@ -3,6 +3,7 @@
 */
 
 // Crafty Initilization
+Crafty.timer.steptype("fixed", 2)
 Crafty.init(D2MDefine.SCREEN_W, D2MDefine.SCREEN_H, "screen");
 Crafty.pixelart(true);
 Crafty.background("#200000");

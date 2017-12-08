@@ -46,10 +46,10 @@ Crafty.c("APlayer", {
 		this.buttons = { a: false, b: false };
 		
 		this.linkInput("DirectionalInput", "Dpad", function(d){ this.updateDpad(d); });
-		this.linkInput("TriggerInputDown", "A", function() { this.buttons.a = true; console.log(this.buttons); });
-		this.linkInput("TriggerInputUp"  , "A", function() { this.buttons.a = false; console.log(this.buttons);});
-		this.linkInput("TriggerInputDown", "B", function() { this.buttons.b = true; console.log(this.buttons);});
-		this.linkInput("TriggerInputUp"  , "B", function() { this.buttons.b = false; console.log(this.buttons);});
+		this.linkInput("TriggerInputDown", "A", function() { this.buttons.a = true; });
+		this.linkInput("TriggerInputUp"  , "A", function() { this.buttons.a = false;});
+		this.linkInput("TriggerInputDown", "B", function() { this.buttons.b = true; });
+		this.linkInput("TriggerInputUp"  , "B", function() { this.buttons.b = false;});
 		
 		this.onGround = false;
 		this.walkSpeed = 186;
@@ -67,10 +67,15 @@ Crafty.c("APlayer", {
         if ((hitDatas = this.hit('WSolid'))) {
           hitData = hitDatas[0]; 
           if (hitData.type === 'SAT') { 
-            this.x -= hitData.overlap * hitData.normal.x;
-            this.y -= hitData.overlap * hitData.normal.y;
-			if(hitData.normal.y !== 0) { this.vy = 0; }
-			if(hitData.normal.x !== 0) { this.vx = 0; }
+			
+            this.x -= ((hitData.overlap - 0.5) * hitData.normal.x);
+            this.y -= ((hitData.overlap - 0.5) * hitData.normal.y);
+			if(hitData.normal.y !== 0 && Math.sign(hitData.normal.y) != Math.sign(this.vy)) { 
+				this.vy = 0; 
+			}
+			if(hitData.normal.x !== 0 && Math.sign(hitData.normal.x) != Math.sign(this.vx)) { 
+				this.vx = 0;
+			}
           } else { // Handle an MBR collision
 			console.log("Collided with WSolid that has no SAT collision defined.");
             this[c.axis] = c.oldValue;
@@ -96,42 +101,47 @@ Crafty.c("APlayer", {
 Crafty.c("MVNormal", {
 	_walkSpeed : 186,
 	_walkAccel : 32,
+	_airWalkSpeed : 64,
+	_airWalkAccel : 8,
 	_jumpImpulse : 256,
 	init : function() {
 		this.requires("Actor, Gravity, Collision");
 	},
 	actMove : function(left, right, jump) {
-		if(this.ground !== null) {
-			// Apply ground friction
-			this.vx = this.vx * this.ground.friction;
-			if(left === true) {
-				this.walk(-1);
-			}
-			if(right === true) {
-				this.walk(1);
-			}
-			if(jump === true) {
-				this.jump();
-			}
-		}
-	},
-	walk : function(dir) {
 		var s = this._walkSpeed;
 		var a = this._walkAccel;
 		if(this.ground !== null) {
-			if(dir < 0 && this.vx > -s) {
-				this.vx -= a;
-				if(this.vx < -s) { this.vx = -s; }
-			} else if(dir > 0 && this.vx < s) {
-				this.vx += a;
-				if(this.vx > s) { this.vx = s; }
+			// Apply ground friction
+			this.vx = this.vx * this.ground.friction;
+			// JumP!
+			if(jump === true) {
+				this.jump(this._jumpImpulse);
 			}
+		} else {
+			// Airwalk
+			s = this._airWalkSpeed;
+			a = this._airWalkAccel;
+		}
+		if(left === true) {
+			this.walk(-1, s, a);
+		}
+		if(right === true) {
+			this.walk(1, s, a);
 		}
 	},
-	jump : function() {
-		var i = this._jumpImpulse;
-		if(this.ground !== null && this.vy > -i) {
-			this.vy += -i;
+	walk : function(dir, spd, acc) {
+		var s = spd;
+		var a = acc;
+		
+		if(dir < 0 && this.vx > -s) {
+			this.vx -= a;
+			if(this.vx < -s) { this.vx = -s; }
+		} else if(dir > 0 && this.vx < s) {
+			this.vx += a;
+			if(this.vx > s) { this.vx = s; }
 		}
+	},
+	jump : function(impulse) {
+		this.vy += -impulse;
 	}
 });
