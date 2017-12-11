@@ -32,10 +32,10 @@ Crafty.c("Actor", {
 */
 Crafty.c("APlayer", {
 	init: function() {
-		this.requires("Actor, Gravity, Collision, Controllable, MVNormal");
+		this.requires("Actor, Gravity, Collision, Controllable, MVFloat");
 		
 		this.gravity("WSolid");
-		
+		this.antigravity();
 		// Collision
 		this.bind("LandedOnGround", function() { this.onGround = true; });
 		this.bind("LiftedOffGround", function() { this.onGround = false;});
@@ -60,7 +60,10 @@ Crafty.c("APlayer", {
 		this.bind("EnterFrame", this.think);
 	},
 	think : function() {
-		this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
+		// Walk controls
+		// this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
+		// Float Controls
+		this.actMove(this.dpad.u, this.dpad.d, this.dpad.l, this.dpad.r);
 	},
 	checkCollision : function(c) {
         var hitDatas, hitData;
@@ -143,5 +146,56 @@ Crafty.c("MVNormal", {
 	},
 	jump : function(impulse) {
 		this.vy += -impulse;
+	}
+});
+
+Crafty.c("MVFloat", {
+	_floatSpeed : 188,
+	_floatAccel : 188,
+	_floatAirFriction : 0.85,
+	init : function() {
+		this.requires("Actor");
+		
+	},
+	actMove : function(up, down, left, right) {
+		var x = 0;
+		var y = 0;
+		
+		if(up === true) {
+			y -= 1;
+		}
+		if(down == true) {
+			y += 1;
+		}
+		if(left === true) {
+			x -= 1;
+		}
+		if(right === true) {
+			x += 1;
+		}
+		this.float(x, y, this._floatSpeed, this._floatAccel);
+	},
+	float : function(x, y, spd, acc) {
+		if(x == 0){
+			this.vx = this.vx * this._floatAirFriction;
+		}
+		else if(x < 0 && this.vx > -spd) {
+			this.vx -= acc;
+			if(this.vx < -spd) { this.vx = -spd; }
+		} else if(x > 0 && this.vx < spd) {
+			this.vx += acc;
+			if(this.vx > spd) { this.vx = spd; }
+		}
+		
+		if(y == 0) {
+			this.vy = this.vy * this._floatAirFriction;
+		} else if (y < 0 && this.vy > -spd) {
+			this.vy -= acc;
+			if(this.vy < -spd) { this.vy = -spd; }
+		} else if(y > 0 && this.vy < spd) {
+			this.vy += acc;
+			if(this.vy > spd) { this.vy = spd; }
+		}
+
 	}
 });
