@@ -33,13 +33,17 @@ User Interface
 Game Mechanics
   * Game Physics
 	+ Using Crafty Gravity - 11.30.17
+	. Break physics down into smaller components.
+		+ Gravity - 12.11.17
+		- Refactor component logic into Event signals.
 	. Wall Collisions 
-		. Rough wall handling implemented, see APlayer for the rough draft
+		+ Rough wall handling implemented, see APlayer for the rough draft
+		+ Corrected wall handling implemented - 12.11.17
 	. Movement
-		. Walking : Lateral movement when 'onground'
-		. Jumping : Vertical movement thrust when 'onground' - works, but not happy with airwalk and seems squirrley
-		. Flying
-		. Floating
+		+ Walking : Lateral movement when 'onground' (Revised and Corrected) - 12.11.17
+		+ Jumping : Vertical movement thrust when 'onground' (Revised and Corrected) - 12.11.17
+		+ Flying  - 12.11.17 
+		+ Floating -
 		+ Falling : Default action of Gravity
 		+ Friction : Implemented on WSolid world blocks. See APlayer for rough draft on entity interaction.
   * Game Interactions

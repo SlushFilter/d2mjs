@@ -3,8 +3,9 @@
  *  D2M Actor framework. 
  *
  * Purpose :
- *  Provides Components and helper functions for defining, creating and destroying actors in the game world.
- *
+ *  Provides Components and helper functions for defining properties and behaviors of actors in the game world.
+ *  Additionally provides helper functions for creating and destroying actors in the game world.
+ *	
  * Global Events :
  *
  * Private Events :
@@ -31,16 +32,8 @@ Crafty.c("Actor", {
 	The Player Actor
 */
 Crafty.c("APlayer", {
+	required : "Actor, Controllable, AIPlayer, PGravity, MVNormal",
 	init: function() {
-		this.requires("Actor, Gravity, Collision, Controllable, MVFloat");
-		
-		this.gravity("WSolid");
-		this.antigravity();
-		// Collision
-		this.bind("LandedOnGround", function() { this.onGround = true; });
-		this.bind("LiftedOffGround", function() { this.onGround = false;});
-		this.bind("Moved", this.checkCollision);
-		
 		// Controller Linkage
 		this.dpad = { l: false, r: false, u: false, d: false };
 		this.buttons = { a: false, b: false };
@@ -51,21 +44,43 @@ Crafty.c("APlayer", {
 		this.linkInput("TriggerInputDown", "B", function() { this.buttons.b = true; });
 		this.linkInput("TriggerInputUp"  , "B", function() { this.buttons.b = false;});
 		
-		this.onGround = false;
 		this.walkSpeed = 186;
 		this.w = 48;
 		this.h = 96;
-		
-		// Per-Loop actions
-		this.bind("EnterFrame", this.think);
 	},
+	
 	think : function() {
 		// Walk controls
-		// this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
+		this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
 		// Float Controls
-		this.actMove(this.dpad.u, this.dpad.d, this.dpad.l, this.dpad.r);
+		// this.actMove(this.dpad.u, this.dpad.d, this.dpad.l, this.dpad.r);
 	},
-	checkCollision : function(c) {
+
+	updateDpad : function(d) {
+		if(d.x < 0) { this.dpad.l = true; } else { this.dpad.l = false; }
+		if(d.x > 0) { this.dpad.r = true; } else { this.dpad.r = false; }
+		if(d.y < 0) { this.dpad.u = true; } else { this.dpad.u = false; }
+		if(d.y > 0) { this.dpad.d = true; } else { this.dpad.d = false; }
+	}
+});
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	Physics Components
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+// PSolid
+/*
+	Defines solid behavior of entities in the world. They will perform solid
+	2D Collision response to WSolid flagged entities.
+*/
+Crafty.c("PSolid", {
+	required : "Actor, Collision",
+	
+	events: {
+		"Moved" : function(c) { this.solidCollision(c); }
+	},
+	
+	solidCollision : function(c) {
+		console.log("solidCollision");
         var hitDatas, hitData;
         if ((hitDatas = this.hit('WSolid'))) {
           hitData = hitDatas[0]; 
@@ -84,12 +99,23 @@ Crafty.c("APlayer", {
             this[c.axis] = c.oldValue;
           }
         }	
+	}
+});
+
+// PGravity
+/*
+	Causes an entity to be effected by world gravity and land on WPlatforms.
+	onGround is maintained local variable that reflects whether the entity is on a platform or not.
+*/
+Crafty.c("PGravity", {
+	onGround : false,
+	required : "Actor, Collision, Motion, Gravity",
+	events : {
+		"LandedOnGround" : function() { this.onGround = true; },
+		"LiftedOffGround" : function() { this.onGround = false; }
 	},
-	updateDpad : function(d) {
-		if(d.x < 0) { this.dpad.l = true; } else { this.dpad.l = false; }
-		if(d.x > 0) { this.dpad.r = true; } else { this.dpad.r = false; }
-		if(d.y < 0) { this.dpad.u = true; } else { this.dpad.u = false; }
-		if(d.y > 0) { this.dpad.d = true; } else { this.dpad.d = false; }
+	init : function() {
+		this.gravity("WSolid");
 	}
 });
 
@@ -107,9 +133,7 @@ Crafty.c("MVNormal", {
 	_airWalkSpeed : 64,
 	_airWalkAccel : 8,
 	_jumpImpulse : 256,
-	init : function() {
-		this.requires("Actor, Gravity, Collision");
-	},
+	required : "Actor, PGravity",
 	actMove : function(left, right, jump) {
 		var s = this._walkSpeed;
 		var a = this._walkAccel;
@@ -149,14 +173,17 @@ Crafty.c("MVNormal", {
 	}
 });
 
-Crafty.c("MVFloat", {
+// MVFly
+/*
+	Flight behavior - For best Results, the entity should have gravity disabled.
+*/
+Crafty.c("MVFly", {
 	_floatSpeed : 188,
 	_floatAccel : 188,
 	_floatAirFriction : 0.85,
-	init : function() {
-		this.requires("Actor");
-		
-	},
+
+	required : "Actor",
+
 	actMove : function(up, down, left, right) {
 		var x = 0;
 		var y = 0;
@@ -199,3 +226,26 @@ Crafty.c("MVFloat", {
 
 	}
 });
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	AI Components and Support Functions.
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+// AIPlayer
+/*
+	AI Think routine for the player - Fires on every frame for responsive
+	controls.
+*/
+
+Crafty.c("AIPlayer",{
+	required : "APlayer",
+	events : {
+		"EnterFrame" : function(d) { this.playerThink(d); }
+	},
+	playerThink : function(d) {
+		// Walk controls
+		this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
+		// Float Controls
+		// this.actMove(this.dpad.u, this.dpad.d, this.dpad.l, this.dpad.r);
+	}
+})

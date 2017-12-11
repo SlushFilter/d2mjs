@@ -9,15 +9,18 @@
 */
 Crafty.c("WSolid", {
   friction : 0.8,
+  required : "2D, Canvas, Collision, DebugRectangle",
   init: function() {
     // TODO: Remove debugging feature for WSolid
-    this.requires("2D, Canvas, Collision, DebugRectangle");
-    this.debugStroke("red");
+    this.debugStroke("orange");
     this.debugRectangle(this);
   }
 });
 
 // WBlock
+/*
+	Debugging visual aid.
+*/
 Crafty.c("WBlock", {
   init: function() {
     // TODO: Remove debugging feature for WBlock
