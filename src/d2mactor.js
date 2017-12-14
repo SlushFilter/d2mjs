@@ -9,7 +9,7 @@
  * Global Events :
  *
  * Private Events :
- *
+ *	ACT_MOVE ({ dpad: { u, d, l, r }, buttons: { a, b }}) - This event should be fired when it is this entity's turn to move.
  */
 
 // Actor
@@ -17,14 +17,16 @@
 	Base component for all actors.
 */
 Crafty.c("Actor", {
+  required : "2D, Canvas, DebugRectangle",
+	
   init: function() {
     // TODO: Remove debugging feature for Actor
-    this.requires("2D, Canvas, DebugRectangle");
     this.debugStroke("green");
     this.debugRectangle(this);
 	this.w = 8;
 	this.h = 8;
   }
+  
 });
 
 // APlayer
@@ -32,7 +34,7 @@ Crafty.c("Actor", {
 	The Player Actor
 */
 Crafty.c("APlayer", {
-	required : "Actor, Controllable, AIPlayer, PGravity, MVNormal",
+	required : "Actor, Controllable, AIPlayer, PGravity, PSolid, MVNormal",
 	init: function() {
 		// Controller Linkage
 		this.dpad = { l: false, r: false, u: false, d: false };
@@ -47,13 +49,6 @@ Crafty.c("APlayer", {
 		this.walkSpeed = 186;
 		this.w = 48;
 		this.h = 96;
-	},
-	
-	think : function() {
-		// Walk controls
-		this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
-		// Float Controls
-		// this.actMove(this.dpad.u, this.dpad.d, this.dpad.l, this.dpad.r);
 	},
 
 	updateDpad : function(d) {
@@ -134,14 +129,17 @@ Crafty.c("MVNormal", {
 	_airWalkAccel : 8,
 	_jumpImpulse : 256,
 	required : "Actor, PGravity",
-	actMove : function(left, right, jump) {
+	events : {
+		"ACT_MOVE" : function(data) { this.actMove(data.dpad, data.buttons); }
+	},
+	actMove : function(dpad, buttons) {
 		var s = this._walkSpeed;
 		var a = this._walkAccel;
 		if(this.ground !== null) {
 			// Apply ground friction
 			this.vx = this.vx * this.ground.friction;
 			// JumP!
-			if(jump === true) {
+			if(buttons.a === true) {
 				this.jump(this._jumpImpulse);
 			}
 		} else {
@@ -149,10 +147,10 @@ Crafty.c("MVNormal", {
 			s = this._airWalkSpeed;
 			a = this._airWalkAccel;
 		}
-		if(left === true) {
+		if(dpad.l === true) {
 			this.walk(-1, s, a);
 		}
-		if(right === true) {
+		if(dpad.r === true) {
 			this.walk(1, s, a);
 		}
 	},
@@ -181,23 +179,25 @@ Crafty.c("MVFly", {
 	_floatSpeed : 188,
 	_floatAccel : 188,
 	_floatAirFriction : 0.85,
-
+	events : {
+		"ACT_MOVE" : function(dpad, buttons) { this.actMove(dpad, buttons); }
+	},
 	required : "Actor",
 
-	actMove : function(up, down, left, right) {
+	actMove : function(dpad, buttons) {
 		var x = 0;
 		var y = 0;
 		
-		if(up === true) {
+		if(dpad.u === true) {
 			y -= 1;
 		}
-		if(down == true) {
+		if(dpad.d == true) {
 			y += 1;
 		}
-		if(left === true) {
+		if(dpad.l === true) {
 			x -= 1;
 		}
-		if(right === true) {
+		if(dpad.r === true) {
 			x += 1;
 		}
 		this.float(x, y, this._floatSpeed, this._floatAccel);
@@ -243,8 +243,9 @@ Crafty.c("AIPlayer",{
 		"EnterFrame" : function(d) { this.playerThink(d); }
 	},
 	playerThink : function(d) {
-		// Walk controls
-		this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
+			this.trigger("ACT_MOVE", { dpad : this.dpad, buttons : this.buttons });
+	// Walk controls
+			//this.actMove(this.dpad.l, this.dpad.r, this.buttons.a);
 		// Float Controls
 		// this.actMove(this.dpad.u, this.dpad.d, this.dpad.l, this.dpad.r);
 	}

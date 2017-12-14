@@ -4,7 +4,21 @@ Audio
   * Audio Subsystem Considerations and Interface.
 	. Background Music
 	. Sound Effects
-
+Graphics
+  * Entity
+	. Animations
+	. Static
+  * Map / Environment
+	. Background
+		+ Rough draft of a scrolling background implemented.
+		. Build support functions to setup a scrolling background.
+		. Build support functions to tear down scrolling backgrounds.
+		. Scrolling X and/or Y backgrounds.
+		. Fixed X and/or Y backgrounds.
+	. Foreground / tiles
+  * UI
+	. Graphics for UI can be postponed until the UI is reworked.
+  
 Entity
   * General entity structure and general purpose handling method.
   * Inventory Layout
@@ -21,7 +35,7 @@ Entity
 
 Map Loading
   * Map Format
-	. map.txt crated, this will serve as a rough draft.
+	. map.txt created, this will serve as a rough draft.
   * Data and Meta Data concerns
   * Portaling
 
@@ -30,20 +44,20 @@ User Interface
   * Implement UI as a crafty subsys.
   * User Input
 	+ Register a player controller through Crafty Subsystems - 11.30.17
+	
 Game Mechanics
   * Game Physics
 	+ Using Crafty Gravity - 11.30.17
-	. Break physics down into smaller components.
+	+ Break physics down into smaller components.
 		+ Gravity - 12.11.17
-		- Refactor component logic into Event signals.
-	. Wall Collisions 
+		+ Refactor component logic into Event signals.
+	+ Wall Collisions 
 		+ Rough wall handling implemented, see APlayer for the rough draft
 		+ Corrected wall handling implemented - 12.11.17
-	. Movement
+	+ Movement
 		+ Walking : Lateral movement when 'onground' (Revised and Corrected) - 12.11.17
 		+ Jumping : Vertical movement thrust when 'onground' (Revised and Corrected) - 12.11.17
 		+ Flying  - 12.11.17 
-		+ Floating -
 		+ Falling : Default action of Gravity
 		+ Friction : Implemented on WSolid world blocks. See APlayer for rough draft on entity interaction.
   * Game Interactions

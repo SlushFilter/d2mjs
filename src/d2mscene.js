@@ -186,7 +186,7 @@ Crafty.scene("TestMap",
     
 	// Player generation
 	Crafty.e("APlayer").attr({x: 148, y: 64});
-	
+	Crafty.e("GFXBackgroundTest");
   },
   // Leave Scene
   function() {
