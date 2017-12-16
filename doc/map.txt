@@ -44,6 +44,7 @@ map.txt - Map formatting specs.
     MapEntity - A superclass of map component that indicates this map object
       has some sort of interaction (eg; spawners, portals, breakable objects.)
 
+	  
 Test Data:
 
 map00 : {  // Root grouping

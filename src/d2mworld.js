@@ -41,3 +41,32 @@ Crafty.c("WTex", {
     this.requires("2D, Canvas, Image");
   }
 });
+
+function d2mLoadMap(map, comp) {
+	console.log(map);
+	
+	var c = comp;
+	if(c !== "") { c += ", "; }
+
+	c = c + map.comp;
+	var areas = map.areas;
+	var attr = map.attr;
+	// iterate over all areas in map
+	for(var i = 0; i < areas.length; i++) {
+		var area = areas[i];
+		var e = Crafty.e(c);
+		e.attr(attr);
+		e.x = area[0];
+		e.y = area[1];
+		e.w = area[2];
+		e.h = area[3];
+	}
+	
+	// iterate over all elements in map
+	for(var key in map) {
+		if(key !== "comp" && key !== "areas" && key !== "attr") {
+			console.log(key);
+			d2mLoadMap(map[key], c);
+		}
+	}
+}

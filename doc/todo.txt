@@ -35,9 +35,10 @@ Entity
 
 Map Loading
   * Map Format
-	. map.txt created, this will serve as a rough draft.
+	+ map.txt created, this will serve as a rough draft.
+	+ using map.txt as a guideline, a basic map building structure has been created
   * Data and Meta Data concerns
-  * Portaling
+  * Portaling ... what was this again ? x)
 
 User Interface
   * Menu handling.
@@ -64,12 +65,12 @@ Game Mechanics
 	- Attacking
 	
   * Destructible Map Areas
-
+	. Build destructible map components
+	
 Gameplay Experience
   * Over Arcing storyline.
   * Shops
   * Characters
-  * Come up with a better name than Vrugou
+  * Come up with a better name than Vrugou ?
   
 -- DONE ---
-

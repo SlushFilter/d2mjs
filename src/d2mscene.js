@@ -176,17 +176,19 @@ Crafty.scene("TestMap",
     var ui = D2MGlobal.UI;
     ui.clear();
 	// World Generation
-    Crafty.e("WBlock, WSolid").attr({x: 64, y: 64, w: 64, h:472  });
-    Crafty.e("WBlock, WSolid").attr({x: 672, y: 64, w: 64, h:472  });
-    Crafty.e("WBlock, WSolid").attr({x: 128, y: 536, w: 544, h:64  });
-    Crafty.e("WBlock, WSolid").attr({x: 256, y: 472, w: 64, h:64  });
-    Crafty.e("WBlock, WSolid").attr({x: 320, y: 408, w: 64, h:128  });
-    Crafty.e("WBlock, WSolid").attr({x: 384, y: 472, w: 64, h:64  });
-    Crafty.e("WBlock, WSolid").attr({x: 512, y: 344, w: 64, h:64  });
-    
+    //Crafty.e("WBlock, WSolid").attr({x: 64, y: 64, w: 64, h:472  });
+    //Crafty.e("WBlock, WSolid").attr({x: 672, y: 64, w: 64, h:472  });
+    //Crafty.e("WBlock, WSolid").attr({x: 128, y: 536, w: 544, h:64  });
+    //Crafty.e("WBlock, WSolid").attr({x: 256, y: 472, w: 64, h:64  });
+    //Crafty.e("WBlock, WSolid").attr({x: 320, y: 408, w: 64, h:128  });
+    //Crafty.e("WBlock, WSolid").attr({x: 384, y: 472, w: 64, h:64  });
+    //Crafty.e("WBlock, WSolid").attr({x: 512, y: 344, w: 64, h:64  });
+    d2mLoadMap(d2mAtrium, "TESTMAP");
 	// Player generation
-	Crafty.e("APlayer").attr({x: 148, y: 64});
-	Crafty.e("GFXBackgroundTest");
+	var p = Crafty.e("APlayer").attr({x: 148, y: 64});
+	Crafty.viewport.follow(p, 0, 0);
+	//Crafty.e("GFXBackground").setImage("test.png");
+	
   },
   // Leave Scene
   function() {

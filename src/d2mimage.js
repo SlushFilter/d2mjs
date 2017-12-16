@@ -25,3 +25,28 @@ Crafty.c("GFXBackgroundTest", {
 			console.log(this.ofsX);
 	}
 });
+
+Crafty.c("GFXBackground", {
+	ofsX : 0,
+	ofsY : 0,
+	lockX : false,
+	lockY : true,
+	events : {
+		"PreRender" : function() { this.scroll(); }
+	},
+	init : function() { },
+	setImage : function(image) {
+		Crafty.stage.elem.style.background = "rgb(0, 0, 0) url(res/gfx/" + image + ")  repeat-x 0 center";
+		Crafty.stage.elem.style.backgroundSize = "100% 100%";
+	},
+	scroll : function() {
+		var ox = Crafty.viewport.x;
+		var oy = Crafty.viewport.y;
+		if(this.lockX === false) {
+			Crafty.stage.elem.style.backgroundPositionX = ox.toString() + "px";
+		}
+		if(this.lockY === false) {
+			Crafty.stage.elem.style.backgroundPositionY = oy.toString() + "px";
+		}
+	}
+});
